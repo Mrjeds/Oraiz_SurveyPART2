@@ -14,7 +14,7 @@
 		username
 		<input id='user' type='text'>
 		password
-		<input id='pass' type='text'>
+		<input id='pass' type='password'>
 
 		<button type="button" onclick="clickButton( document.getElementById('user').value ,document.getElementById('pass').value )">Login</button>
 		<button type="button" onclick="document.location.href = 'register.html'">Register</button>
@@ -41,8 +41,9 @@
 			async function fetchData() {
 				try {
 					const response = await fetch('http://127.0.0.1:8000/usersLogin',data);
+					const body = await response.json();
 					console.log(response)
-					if (response.data.status =='success') {
+					if (body.status =='success') {
 						document.location.href = 'main.html';
 					} else {
 						throw new Error('Failed to fetch data');

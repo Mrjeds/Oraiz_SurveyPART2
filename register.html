@@ -13,9 +13,9 @@
 		username
 		<input id='user' type='text'>
 		password
-		<input id='pass' type='text'>
+		<input id='pass' type='password'>
 		verify password
-		<input id='verifyPass' type='text'>
+		<input id='verifyPass' type='password'>
 
 		<button type="button" onclick="clickButton( document.getElementById('user').value ,document.getElementById('pass').value, document.getElementById('verifyPass').value )">Register</button>
 		already have account
@@ -26,6 +26,11 @@
 
 
 		const clickButton = (a,b, c) =>{
+
+			if (b !== c) {
+				alert('passwords do not match');
+				return;
+			}
 
 			const postData = {
 				name:a,
@@ -42,9 +47,10 @@
 	
 			async function fetchData() {
 				try {
-					const response = await fetch('http://127.0.0.1:8000/usersLogin',data);
+					const response = await fetch('http://127.0.0.1:8000/users',data);
+					const body = await response.json();
 					console.log(response)
-					if (response.data.status =='register success') {
+					if (body.message) {
 						document.location.href = 'login.html';
 					} else {
 						throw new Error('Failed to fetch data');

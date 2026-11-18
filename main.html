@@ -10,47 +10,25 @@
 
 	
 
-		Name
+		Book title
 		<input id='Name' type='text'>
-		Age
-		<input id='Age' type='text'>
-		Birthday
-		<input id='Birthday' type='text'>
-		Gender
-		<input id="Gender" type='text'>
-		Email
-		<input id="Email" type='text'>
-		School Name
-		<input id="SN" type='text'>
-		Course
-		<input id="Course" type='text'>
-		Year Level
-		<input id="YL"type='text'>
-		Region
-		<input id="Region" type='text'>
-		Country
-		<input id="Country" type='text'>
-		<button type="button" onclick="clickButton( document.getElementById('Name').value ,document.getElementById('Age').value , document.getElementById('Birthday').value, document.getElementById('Gender').value, document.getElementById('Email').value, document.getElementById('SN').value, document.getElementById('Course').value, document.getElementById('YL').value, document.getElementById('Region').value, document.getElementById('Country').value)">Click Me!</button>
+		Price
+		<input id='Price' type='text'>
+		Note
+		<input id='Note' type='text'>
 
+		<button type="button" onclick="clickButton( document.getElementById('Name').value ,document.getElementById('Price').value, document.getElementById('Note').value )">Save Book</button>
 		<script>
 
 
 
 
-		const clickButton = (a,b,c,d,e,f,g,h,i,j) =>{
+		const clickButton = (a,b,c) =>{
 
 			const postData = {
 				Name:a,
-				Age:b,
-				Birthday:c,
-				Gender:d,
-				Email:e,
-				SN:f,
-				Course:g,
-				YL:h,
-				Region:i,
-				Country:j
-
+				Price:b,
+				Note:c
 			};
 
 			const data = {
@@ -63,11 +41,11 @@
 	
 			async function fetchData() {
 				try {
-					const response = await fetch('http://127.0.0.1:8000/Survey',data);
-					const respoJson = await response.json()
+					const response = await fetch('http://127.0.0.1:8000/books',data);
+					const body = await response.json();
 					console.log(response)
-					if (response.data.status =='success') {
-						document.location.href = 'profile.html.html';
+					if (body.message) {
+						alert('Book saved!');
 					} else {
 						throw new Error('Failed to fetch data');
 					}

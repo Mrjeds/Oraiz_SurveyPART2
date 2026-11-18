@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import hashlib
 
 from models import Users
-from models import survey
+from models import book
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -38,7 +38,7 @@ async def root():
 
 
 @app.get("/users/{id}")
-async def read_employee(id):
+async def get_user(id):
     with Session(engine) as session:
         print(id,'--------------------------------------------------------------')
         user = session.get(Users, id)
@@ -46,20 +46,22 @@ async def read_employee(id):
     
 
 @app.post("/users")
-async def root(users  : Users):
+async def create_user(users  : Users):
     with Session(engine) as session:
+        users.password = hashlib.sha256(users.password.encode()).hexdigest()
         session.add(users)
         session.commit()
         session.refresh(users)
         return {"message": users}
     
 @app.post("/usersLogin")
-async def root(users  : Users):
+async def login_user(users  : Users):
     with Session(engine) as session:
 
 
         print()
-        statement = select(Users).where(Users.name == users.name).where(Users.password == users.password)
+        hashed_input = hashlib.sha256(users.password.encode()).hexdigest()
+        statement = select(Users).where(Users.name == users.name).where(Users.password == hashed_input)
         results = session.exec(statement)
 
         # if(results)
@@ -80,18 +82,18 @@ async def root(users  : Users):
             "data": result
             }
     
-@app.get("/Survey/{id}")
-async def read_survey(id):
+@app.get("/books/{id}")
+async def get_book(id):
     with Session(engine) as session:
         print(id,'--------------------------------------------------------------')
-        user = session.get(survey, id)
-        return {"message": user}
-    
+        result = session.get(book, id)
+        return {"message": result}
 
-@app.post("/Survey")
-async def root(survey  : survey):
+
+@app.post("/books")
+async def create_book(book  : book):
     with Session(engine) as session:
-        session.add(survey)
+        session.add(book)
         session.commit()
-        session.refresh(survey)
-        return {"message": survey}
+        session.refresh(book)
+        return {"message": book}
